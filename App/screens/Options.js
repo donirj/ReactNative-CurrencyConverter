@@ -4,9 +4,16 @@ import {
     TouchableOpacity, 
     Text, 
     SafeAreaView, 
-    StyleSheet 
+    StyleSheet,
+    ScrollView,
+    Linking,
+    Alert
 } from 'react-native'
 import {Entypo} from '@expo/vector-icons'
+
+// components
+import { RowItem, RowSeparator } from '../components/RowItem'
+
 
 import colors from '../constants/colors'
 
@@ -30,27 +37,37 @@ const styles = StyleSheet.create({
     }
 })
 
+const openURL = (url) => {
+    return Linking.openURL(url).catch(() => {
+        Alert.alert('Sorry, something went wrong', 'Please try again later')
+    })
+}
+
 export default () => {
     return (
-        <SafeAreaView>
-        <View>
-            <TouchableOpacity style={styles.row}>
-                <Text style={styles.text}>Themes</Text>
-                <Entypo name='chevron-right' size={20} color={colors.blue}/>
-            </TouchableOpacity>
+        <SafeAreaView style={{ flex: 1}}>
+            <ScrollView>
+            <RowItem 
+                text={'themes'}
+                onPress={() => alert("todo!")}
+                rightIcon={<Entypo name='chevron-right' size={20} color={colors.blue}/>}
+            />
 
-            <View style={styles.separator}/>
+            <RowSeparator />
 
-            <TouchableOpacity style={styles.row}>
-                <Text style={styles.text}>React native basics</Text>
-                <Entypo name='export' size={20} color={colors.blue}/>
-            </TouchableOpacity>
+            <RowItem 
+                text={'React native basics'}
+                onPress={() => openURL('https://learn.handlebarlabs.com/p/react-native-basics')}
+                rightIcon={<Entypo name='export' size={20} color={colors.blue}/>}
+            />
 
-            <TouchableOpacity style={styles.row}>
-                <Text style={styles.text}>React native examples</Text>
-                <Entypo name='export' size={20} color={colors.blue}/>
-            </TouchableOpacity>
-        </View>
+            <RowItem 
+                text={'React native by example'}
+                onPress={() => openURL('https://learn.handlebarlabs.com/p/react-native-basics')}
+                rightIcon={<Entypo name='export' size={20} color={colors.blue}/>}
+            />
+
+        </ScrollView>
         </SafeAreaView>
     )
 }
