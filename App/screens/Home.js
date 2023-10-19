@@ -1,15 +1,18 @@
-import React from 'react'
+import React, { useState, useEffect} from 'react'
 import { 
     View, 
     StatusBar,
     StyleSheet,
     Image,
     Dimensions,
-    Text
+    Text,
+    ScrollView,
+    Keyboard
 } from 'react-native';
 
 import colors from '../constants/colors'
 import { ConversionInput } from '../components/ConversionInput'
+import { Button } from '../components/Button';
 
 const screen = Dimensions.get('window')
 
@@ -17,14 +20,16 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.blue,
         flex: 1,
-        justifyContent: "center"
+        
+    },
+    content: {
+        paddingTop: screen.height * 0.2
     },
     logoContainer: {
         alignItems: 'center',
         justifyContent: 'center'
     },
     logoBackground: {
-        
         width: screen.width * 0.45,
         height: screen.width * 0.45
        
@@ -53,10 +58,30 @@ export default () => {
     const quoteCurrency = 'GBP';
     const conversionRate = 0.8345
 
+    const [scrollEnabled, setScrollEnabled] = useState(false)
+
+    useEffect(() => {
+        // for when keyboard opens
+        const showListener = Keyboard.addListener('keyboardDidShow', () => {
+            setScrollEnabled(true)
+        })
+
+        // for when keyboard closes
+        const hideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setScrollEnabled(false)
+        })
+
+        return () => {
+            showListener.remove();
+            hideListener.remove();
+        };
+    },[])
+
     return (
         <View style={styles.container}>
+            <ScrollView scrollEnabled={scrollEnabled}>
             <StatusBar barStyle="light-content" backgroundColor={colors.blue}/>
-
+            <View style={styles.content}>
             <View style={styles.logoContainer}>
                 <Image 
                     source={require('../../assets/background.png')} 
@@ -88,6 +113,10 @@ export default () => {
                 {`1 ${baseCurrency} = ${conversionRate} ${quoteCurrency}as of april 3 of 2023`}
             </Text>
 
+            <Button text="Rever Currencies" onPress={() => alert("todo!")}/>
+            <View style={{height: screen.height}} />
+            </View>
+            </ScrollView>
         </View>
     )
 };
